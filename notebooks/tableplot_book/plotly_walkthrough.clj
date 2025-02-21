@@ -56,6 +56,32 @@
       :=mark-size 20
       :=mark-opacity 0.6}))
 
+
+;; ## The rendering process
+
+;; For basic use, it's not necessary to know the steps that lead to display of a Plotly plot.
+;; However, having an overview of the steps may be helpful for intermediate use,
+
+;; This is a sketch of the process that usually happens automatically after the first step.
+
+;; 1. The parameter map that you pass to a function such as `plotly/layer-point` typically
+;; contains Plotly-specific [Hanami substitution
+;; keys](https://github.com/jsa-aerial/hanami?tab=readme-ov-file#templates-substitution-keys-and-transformations).
+;; See below for more on these.
+;; 2. The values that give for those keys are combined with default values
+;; calculated for other Plotly-specific keys.
+;; 3. These are used to generate an EDN specification for a Plotly.js plot.
+;; It will have a `kind/plotly` meta annotation for the sake of the next step.
+;; 4. This EDN-format plot specification is then transformed into a [Plotly
+;; JSON](https://plotly.com/chart-studio-help/json-chart-schema)
+;; specification.
+;; 5. This is then used to generate a plot.
+
+;; Sections below give further information about this process, about how
+;; to view the intermediate representations used in the process, and how to
+;; use them for more advanced techniques.
+
+
 ;; ## Templates and parameters
 
 ;; (💡 You do neet need to understand these details for basic usage.)
@@ -90,9 +116,12 @@
 
 ;; ## Realizing the plot
 
-;; If you wish to see the resulting plot specification before displaying it
-;; as a plot, you can use the `plot` function. In this case,
-;; it generates a Plotly.js plot:
+;; If you wish to see the resulting EDN plot specification before displaying it
+;; as a plot, you can use the `plot` function.  You can also use this
+;; specification for customizations that aren't supported using the
+;; Hanami keys described above.
+
+;; In this case, it generates a Plotly.js plot:
 
 (-> example1
     plotly/plot
@@ -105,9 +134,16 @@
     plotly/plot
     meta)
 
-;; This can be useful if you wish to process the Actual Plotly.js spec
-;; rather than use the Tableplot Plotly API. Let us change the background colour,
-;; for example:
+;; One can manipulate the resulting the Plotly EDN specification with
+;; arbitrary Clojure functions. By default the resulting EDN will cause a
+;; plot containing the modifications to be displayed.
+
+;; This method allows customizations that might not be supported by the
+;; Tableplot Plotly API.  As a simple illustration, let us change the 
+;; background colour this way, even though one could do this 
+;; using the `:=background` Hanami key). We can use
+;; `assoc-in` to modify the value of `:plot_bgcolor` nested near the end 
+;; of the `example1` map displayed above:
 
 (-> example1
     plotly/plot
