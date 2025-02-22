@@ -57,34 +57,28 @@
       :=mark-opacity 0.6}))
 
 
-;; ## The rendering process
+;; ## Processing overview
 
-;; For basic use, it's not necessary to know the steps that lead to display of a Plotly plot.
-;; However, having an overview of the steps may be helpful for intermediate use,
+;; For basic use with Clay, you don't need to understand more about stages leading to 
+;; display of a plot. An overview of the stages may be helpful later on,
+;; though.  Sections below give further information about how you can
+;; view the intermediate EDN representations in Clay and use them for more advanced 
+;; customizations.
 
-;; This is a sketch of the process that usually happens automatically after the first step.
-
-;; 1. The parameter map that you pass to a function such as `plotly/layer-point` typically
+;; 1. The parameter map you pass to a function such as `plotly/layer-point` typically
 ;; contains Plotly-specific [Hanami substitution
 ;; keys](https://github.com/jsa-aerial/hanami?tab=readme-ov-file#templates-substitution-keys-and-transformations).
-;; See below for more on these.
-;; 2. The values that give for those keys are combined with default values
+;; 2. The values of those keys will automatically be combined with default values
 ;; calculated for other Plotly-specific keys.
-;; 3. These are used to generate an EDN specification for a Plotly.js plot.
-;; It will have a `kind/plotly` meta annotation for the sake of the next step.
-;; 4. This EDN-format plot specification is then transformed into a [Plotly
+;; 3. This results in an EDN specification for a Plotly.js plot.
+;; It will be given a `kind/plotly` meta annotation needed for the next stage.
+;; 4. The EDN-format plot specification is automatically transformed into a [Plotly
 ;; JSON](https://plotly.com/chart-studio-help/json-chart-schema)
 ;; specification.
-;; 5. This is then used to generate a plot.
-
-;; Sections below give further information about this process, about how
-;; to view the intermediate representations used in the process, and how to
-;; use them for more advanced techniques.
+;; 5. And this specification is used to display a plot.
 
 
 ;; ## Templates and parameters
-
-;; (💡 You do neet need to understand these details for basic usage.)
 
 ;; Technically, the parameter maps contain [Hanami substitution keys](https://github.com/jsa-aerial/hanami?tab=readme-ov-file#templates-substitution-keys-and-transformations),
 ;; which means they are processed by a [simple set of rules](https://github.com/jsa-aerial/hanami?tab=readme-ov-file#basic-transformation-rules),
@@ -108,7 +102,10 @@
 ;; This template has all the necessary knowledge, including the substitution
 ;; keys, to turn into a plot. This happens when your visual tool (e.g., Clay)
 ;; displays the plot. The tool knows what to do thanks to the Kindly metadata
-;; and a special function attached to the plot.
+;; and a special function attached to the plot.  For example, the metadata
+;; lets Clay know that the template should be transformed into a
+;; specification with template keys and values replaced with what Plotly.js
+;; needs.
 
 (meta example1)
 
@@ -118,8 +115,8 @@
 
 ;; If you wish to see the resulting EDN plot specification before displaying it
 ;; as a plot, you can use the `plot` function.  You can also use this
-;; specification for customizations that aren't supported using the
-;; Hanami keys described above.
+;; specification for customizations that might not be supported by the
+;; Plotly Hanami keys mentioned above.
 
 ;; In this case, it generates a Plotly.js plot:
 
@@ -134,25 +131,44 @@
     plotly/plot
     meta)
 
-;; One can manipulate the resulting the Plotly EDN specification with
-;; arbitrary Clojure functions. By default the resulting EDN will cause a
-;; plot containing the modifications to be displayed.
+;; You can manipulate the resulting the Plotly EDN specification with
+;; arbitrary Clojure functions. In Clay the resulting EDN will cause a
+;; plot containing the modifications to be displayed by default.
 
 ;; This method allows customizations that might not be supported by the
 ;; Tableplot Plotly API.  As a simple illustration, let us change the 
-;; background colour this way, even though one could do this 
+;; background colour this way (though one could do this 
 ;; using the `:=background` Hanami key). We can use
 ;; `assoc-in` to modify the value of `:plot_bgcolor` nested near the end 
 ;; of the `example1` map displayed above:
+
 
 (-> example1
     plotly/plot
     (assoc-in [:layout :plot_bgcolor] "#eeeedd"))
 
-;; For another example, let us use a logarithmic scale for the y axis:
+;; This next example compresses distances in the `y` direction, illustrating 
+;; the idea that one can perform a customization going beyond what Hanami keys 
+;; allow at present.
+
 (-> example1
     plotly/plot
-    (assoc-in [:layout :yaxis :type] "log"))
+    (assoc-in [:layout :yaxis :scaleanchor] :x)
+    (assoc-in [:layout :yaxis :scaleratio] 0.25)) ; 1 is the default, but this can be used to specify other ratios
+
+^:kindly/hide-code
+(comment
+  ;; This is the example that was here in the previous version.
+  ;; The resulting plot looks almost the same original plot.  The `"log"`
+  ;; `:type` doesn't seem to be doing what it's supposed to.  Also, this is
+  ;; another example that does something you could do with existing Plotly
+  ;; Hanami keys.  The new example above does something that can't be done
+  ;; that way, at present.
+  ;; For another example, let us use a logarithmic scale for the y axis:
+  (-> example1
+      plotly/plot
+      (assoc-in [:layout :yaxis :type] "log"))
+)
 
 ;; ## Field type inference
 
