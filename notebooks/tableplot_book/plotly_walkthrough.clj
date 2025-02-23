@@ -1,6 +1,7 @@
 ;; # Plotly walkthrough 👣
 
 ;; Tableplot offers a Clojure API for creating [Plotly.js](https://plotly.com/javascript/) plots through layered pipelines.
+;; (Note: The full [Plotly.js](https://plotly.com/javascript/) documentation won't appear on smaller mobile devices.)
 
 ;; The API uses [Hanami templates](https://github.com/jsa-aerial/hanami?tab=readme-ov-file#templates-substitution-keys-and-transformations) but is completely separate from the classical Hanami templates and parameters.
 
@@ -59,23 +60,23 @@
 
 ;; ## Processing overview
 
-;; For basic use with Clay, you don't need to understand more about stages leading to 
-;; display of a plot. An overview of the stages may be helpful later on,
-;; though.  Sections below give further information about how you can
-;; view the intermediate EDN representations in Clay and use them for more advanced 
-;; customizations.
+;; For basic use of Tableplot with Clay, it's not necessary to understand
+;; the process that leads to display of a plot. Knowing something about the
+;; steps may be helpful for debugging and for more advanced customizations.
+;; This section and the following sections provide more information about the
+;; process, which is summarized next:
 
-;; 1. The parameter map you pass to a function such as `plotly/layer-point` typically
-;; contains Plotly-specific [Hanami substitution
+;; 1. The parameter map passed to a function such as `plotly/layer-point` 
+;; will typically contain Plotly-specific [Hanami substitution
 ;; keys](https://github.com/jsa-aerial/hanami?tab=readme-ov-file#templates-substitution-keys-and-transformations).
-;; 2. The values of those keys will automatically be combined with default values
+;; 2. The values of those keys are automatically be combined with default values
 ;; calculated for other Plotly-specific keys.
-;; 3. This results in an EDN specification for a Plotly.js plot.
-;; It will be given a `kind/plotly` meta annotation needed for the next stage.
+;; 3. The preceding step results in an EDN map that specifies a Plotly.js plot.
+;; This map will be given a `kind/plotly` meta annotation, needed for the next steps
 ;; 4. The EDN-format plot specification is automatically transformed into a [Plotly
 ;; JSON](https://plotly.com/chart-studio-help/json-chart-schema)
 ;; specification.
-;; 5. And this specification is used to display a plot.
+;; 5. The JSON specification is automatically used to display the plot.
 
 
 ;; ## Templates and parameters
@@ -111,7 +112,7 @@
 
 (:kindly/f example1)
 
-;; ## Realizing the plot (and further customization)
+;; ## Realizing the plot and further customization
 
 ;; If you wish to see the resulting EDN plot specification before displaying it
 ;; as a plot, you can use the `plot` function.  You can also use this
@@ -132,23 +133,23 @@
     meta)
 
 ;; You can manipulate the resulting the Plotly EDN specification with
-;; arbitrary Clojure functions. In Clay the resulting EDN will cause a
-;; plot containing the modifications to be displayed by default.
+;; arbitrary Clojure functions. In Clay, by default this will then cause
+;; the modified EDN to be used to generate a plot.
 
 ;; As a simple illustration, let us change the background colour this way.  
 ;; We can use `assoc-in` to modify the value of `:plot_bgcolor` nested near
 ;; the end of the `example1` map displayed above.
-;; (One could also do this using the `:=background` Hanami key.) 
+;; (One could also do this using the `:=background` Hanami key.)
 
 (-> example1
     plotly/plot
     (assoc-in [:layout :plot_bgcolor] "#eeeedd"))
 
-;; This method allows customizations that might not yet be supported by the
-;; Tableplot Plotly API. The next example compresses distances in the `y` direction
+;; Manipulating the Plotly EDN allows customizations that might not yet be supported by the
+;; Tableplot Plotly API. The next example compresses distances in the `y` direction,
 ;; using a [capability of
 ;; Plotly.js](https://plotly.com/javascript/reference/layout/xaxis/#layout-xaxis-scaleanchor)
-;; that isn't directly supported using Tableplot's Plotly Hanami keys.
+;; that isn't directly supported using Tableplot's Hanami keys.
 
 (-> example1
     plotly/plot
