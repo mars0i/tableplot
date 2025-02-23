@@ -111,7 +111,7 @@
 
 (:kindly/f example1)
 
-;; ## Realizing the plot
+;; ## Realizing the plot (and further customization)
 
 ;; If you wish to see the resulting EDN plot specification before displaying it
 ;; as a plot, you can use the `plot` function.  You can also use this
@@ -135,26 +135,25 @@
 ;; arbitrary Clojure functions. In Clay the resulting EDN will cause a
 ;; plot containing the modifications to be displayed by default.
 
-;; This method allows customizations that might not be supported by the
-;; Tableplot Plotly API.  As a simple illustration, let us change the 
-;; background colour this way (though one could do this 
-;; using the `:=background` Hanami key). We can use
-;; `assoc-in` to modify the value of `:plot_bgcolor` nested near the end 
-;; of the `example1` map displayed above:
-
+;; As a simple illustration, let us change the background colour this way.  
+;; We can use `assoc-in` to modify the value of `:plot_bgcolor` nested near
+;; the end of the `example1` map displayed above.
+;; (One could also do this using the `:=background` Hanami key.) 
 
 (-> example1
     plotly/plot
     (assoc-in [:layout :plot_bgcolor] "#eeeedd"))
 
-;; This next example compresses distances in the `y` direction, illustrating 
-;; the idea that one can perform a customization going beyond what Hanami keys 
-;; allow at present.
+;; This method allows customizations that might not yet be supported by the
+;; Tableplot Plotly API. The next example compresses distances in the `y` direction
+;; using a [capability of
+;; Plotly.js](https://plotly.com/javascript/reference/layout/xaxis/#layout-xaxis-scaleanchor)
+;; that isn't directly supported using Tableplot's Plotly Hanami keys.
 
 (-> example1
     plotly/plot
     (assoc-in [:layout :yaxis :scaleanchor] :x)
-    (assoc-in [:layout :yaxis :scaleratio] 0.25)) ; 1 is the default, but this can be used to specify other ratios
+    (assoc-in [:layout :yaxis :scaleratio] 0.25))
 
 ^:kindly/hide-code
 (comment
