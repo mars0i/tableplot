@@ -1,18 +1,18 @@
 ;; # Plotly walkthrough 👣
 
 ;; Tableplot offers a Clojure API for creating [Plotly.js](https://plotly.com/javascript/) plots through layered pipelines.
-;; (Note: The full [Plotly.js](https://plotly.com/javascript/) documentation won't appear on smaller mobile devices.)
 
 ;; The API uses [Hanami templates](https://github.com/jsa-aerial/hanami?tab=readme-ov-file#templates-substitution-keys-and-transformations) but is completely separate from the classical Hanami templates and parameters.
 
 ;; Here, we provide a walkthrough of that API.
 
-;; See also the more detailed [reference](tableplot_book.plotly_reference.html) 📖.
+;; See also the more detailed [Tableplot Plotly reference](tableplot_book.plotly_reference.html) 📖 and the [Intro to data visualization with Tableplot](https://scicloj.github.io/noj/noj_book.tableplot_datavis_intro.html) 📖.
+;; You might also find the official [Plotly.js reference](https://plotly.com/javascript/) helpful. (The full Plotly.js documentation might not be visible on a narrow mobile device. Try rotating it.)
 
 ;; ## Setup
 ;; For this tutorial, we require:
 
-;; * The Tableplot plotly API namepace
+;; * The Tableplot plotly API namespace
 
 ;; * [Tablecloth](https://scicloj.github.io/tablecloth/) for dataset processing
 
@@ -24,6 +24,8 @@
 
 ;; * the datasets defined in the [Datasets chapter](./tableplot_book.datasets.html)
 
+;; * a few other namespaces used in particular examples.
+
 (ns tableplot-book.plotly-walkthrough
   (:require [scicloj.tableplot.v1.plotly :as plotly]
             [tablecloth.api :as tc]
@@ -31,11 +33,14 @@
             [tech.v3.datatype.datetime :as datetime]
             [tech.v3.dataset.print :as print]
             [scicloj.kindly.v4.kind :as kind]
-            [clojure.string :as str]
             [scicloj.kindly.v4.api :as kindly]
-            [scicloj.metamorph.ml.rdatasets :as rdatasets]
-            [aerial.hanami.templates :as ht]))
-
+            [scicloj.metamorph.ml.rdatasets :as rdatasets]))
+^:kindly/hide-code
+(comment
+  ;; These were in the `require` but aren't used below:
+  [aerial.hanami.templates :as ht]
+  [clojure.string :as str]
+)
 
 ;; ## Basic usage
 
