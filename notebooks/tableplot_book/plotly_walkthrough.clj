@@ -67,9 +67,9 @@
 
 ;; For basic use of Tableplot with Clay, it's not necessary to understand
 ;; the process that leads to display of a plot. Knowing something about the
-;; steps may be helpful for debugging and for more advanced customizations.
+;; steps may be helpful for debugging and for more advanced customizations, though.
 ;; This section and the following sections provide more information about the
-;; process, which is summarized next:
+;; process, summarized here:
 
 ;; 1. The parameter map passed to a function such as `plotly/layer-point` 
 ;; will typically contain Plotly-specific [Hanami substitution
