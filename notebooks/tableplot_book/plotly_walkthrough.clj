@@ -7,7 +7,7 @@
 ;; Here, we provide a walkthrough of that API.
 
 ;; See also the more detailed [Tableplot Plotly reference](tableplot_book.plotly_reference.html) 📖.
-;; You might also find the official [Plotly.js reference](https://plotly.com/javascript/) helpful. (The full Plotly.js documentation might not be visible on a narrow mobile device. Try rotating it.)
+;; You might find the official [Plotly.js reference](https://plotly.com/javascript/) helpful. (Tip: rotate narrow devices.)
 ;; There are additional examples in [Intro to data visualization with Tableplot](https://scicloj.github.io/noj/noj_book.tableplot_datavis_intro.html) in the [Noj book](https://scicloj.github.io/noj).
 
 ;; ## Setup
@@ -21,7 +21,7 @@
 
 ;; * the [print namespace](https://techascent.github.io/tech.ml.dataset/tech.v3.dataset.print.html) of [tech.ml.dataset](https://github.com/techascent/tech.ml.dataset) for customized dataset printing
 
-;; * [Kindly](https://scicloj.github.io/kindly-noted/) (to specify how certaiun values should be visualized)
+;; * [Kindly](https://scicloj.github.io/kindly-noted/) (to specify how certain values should be visualized)
 
 ;; * the datasets defined in the [Datasets chapter](./tableplot_book.datasets.html)
 
@@ -66,11 +66,11 @@
 
 ;; ## Processing overview
 
-;; For basic use of Tableplot with Clay, it's not necessary to understand
-;; the process that leads to display of a plot. Knowing something about the
-;; steps may be helpful for debugging and for more advanced customizations, though.
-;; This section and the following sections provide more information about the
-;; process, summarized here:
+;; For basic use of Tableplot with a tool such as Clay, it's not necessary to
+;; understand the process leading to display of a plot. Knowing more
+;; might be helpful for debugging and advanced customizations, though.
+;; This section and the following ones provide more information about the
+;; process:
 
 ;; 1. The parameter map passed to a function such as `plotly/layer-point` 
 ;; will typically contain Plotly-specific [Hanami substitution
@@ -78,11 +78,14 @@
 ;; 2. The values of those keys are automatically be combined with default values
 ;; calculated for other Plotly-specific keys.
 ;; 3. The preceding step results in an EDN map that specifies a Plotly.js plot.
-;; This map will be given a `kind/plotly` meta annotation, needed for the next steps
 ;; 4. The EDN-format plot specification is automatically transformed into a [Plotly
 ;; JSON](https://plotly.com/chart-studio-help/json-chart-schema)
 ;; specification.
 ;; 5. The JSON specification is automatically used to display the plot.
+
+;; The reason Clay knows what to do with the maps at each step is
+;; because previous steps add appropriate [Kindly](https://scicloj.github.io/kindly-noted/) 
+;; meta annotations to the maps.
 
 
 ;; ## Templates and parameters
@@ -162,19 +165,6 @@
     (assoc-in [:layout :yaxis :scaleanchor] :x)
     (assoc-in [:layout :yaxis :scaleratio] 0.25))
 
-^:kindly/hide-code
-(comment
-  ;; This is the example that was here in the previous version.
-  ;; The resulting plot looks almost the same original plot.  The `"log"`
-  ;; `:type` doesn't seem to be doing what it's supposed to.  Also, this is
-  ;; another example that does something you could do with existing Plotly
-  ;; Hanami keys.  The new example above does something that can't be done
-  ;; that way, at present.
-  ;; For another example, let us use a logarithmic scale for the y axis:
-  (-> example1
-      plotly/plot
-      (assoc-in [:layout :yaxis :type] "log"))
-)
 
 ;; ## Field type inference
 
