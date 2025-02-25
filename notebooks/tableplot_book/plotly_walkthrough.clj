@@ -6,8 +6,9 @@
 
 ;; Here, we provide a walkthrough of that API.
 
-;; See also the more detailed [Tableplot Plotly reference](tableplot_book.plotly_reference.html) 📖 and the [Intro to data visualization with Tableplot](https://scicloj.github.io/noj/noj_book.tableplot_datavis_intro.html) 📖.
+;; See also the more detailed [Tableplot Plotly reference](tableplot_book.plotly_reference.html) 📖.
 ;; You might also find the official [Plotly.js reference](https://plotly.com/javascript/) helpful. (The full Plotly.js documentation might not be visible on a narrow mobile device. Try rotating it.)
+;; There are additional examples in [Intro to data visualization with Tableplot](https://scicloj.github.io/noj/noj_book.tableplot_datavis_intro.html) in the [Noj book](https://scicloj.github.io/noj).
 
 ;; ## Setup
 ;; For this tutorial, we require:
